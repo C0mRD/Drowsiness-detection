@@ -6,3 +6,4 @@
 2. dlib
 3. imutils
 4. gtts
+5. playsound
