@@ -1,5 +1,5 @@
 numpy
-cmake
+cmake==3.25.2
 imutils==0.5.4
 opencv-python==4.5.5.64
 Flask==2.2.2
