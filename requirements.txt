@@ -1,7 +1,7 @@
-dlib==19.24.0
+numpy
+cmake
 imutils==0.5.4
 opencv-python==4.5.5.64
 Flask==2.2.2
 gunicorn==20.1.0
-numpy
-cmake
+dlib==18.17.100
