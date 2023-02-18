@@ -4,3 +4,4 @@ opencv-python==4.5.5.64
 Flask==2.2.2
 gunicorn==20.1.0
 numpy
+cmake
