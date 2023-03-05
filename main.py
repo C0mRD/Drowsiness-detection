@@ -1,20 +1,39 @@
-from flask import Flask, render_template, Response
-from model import gen_frames
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
+import base64
+import cv2
+import numpy as np
+from model import *
 
-# Flask app code
 app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app, ping_interval=30, ping_timeout=120)
 
-@app.route('/video_feed')
-def video_feed():
-    #Video streaming route. Put this in the src attribute of an img tag
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@socketio.on('frame')
+def process_frame(frame):
+    # Convert data URL to OpenCV image
+    data = frame.split(',')[1]
+    data = bytes(data, 'utf-8')
+    data = base64.b64decode(data)
+
+    img = cv2.imdecode(np.fromstring(data, np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.resize(img, (640, 480))
+
+    # Process the image
+    img = process_frames(img)
+
+    # Encode the processed image as JPEG and send it to the client
+    _, buffer = cv2.imencode('.jpg', img)
+    data = base64.b64encode(buffer)
+    data = data.decode('utf-8')
+    emit('image', data)
 
 
 @app.route('/')
 def index():
-    """Video streaming home page."""
     return render_template('index.html')
 
 
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app, debug=True)
