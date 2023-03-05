@@ -7,7 +7,7 @@ from model import *
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, ping_interval=30, ping_timeout=120)
+socketio = SocketIO(app, ping_interval=10, ping_timeout=120)
 
 
 @socketio.on('frame')
